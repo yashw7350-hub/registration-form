@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Registration Form</title>
+  <style>
+    body {
+      background: linear-gradient(to right, #74ebd5, #ACB6E5);
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .form-container {
+      background: white;
+      padding: 30px 40px;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      width: 400px;
+      text-align: center;
+    }
+
+    .form-container h2 {
+      margin-bottom: 20px;
+      color: #4A4A4A;
+    }
+
+    .form-container label {
+      font-weight: bold;
+      display: block;
+      text-align: left;
+      margin-top: 15px;
+      margin-bottom: 5px;
+    }
+
+    .form-container input,
+    .form-container select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #74ebd5;
+      border-radius: 8px;
+      outline: none;
+      box-sizing: border-box;
+    }
+
+    .form-container input:focus,
+    .form-container select:focus {
+      border-color: #ACB6E5;
+    }
+
+    .form-container button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      width: 100%;
+      background: #74ebd5;
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+
+    .form-container button:hover {
+      background: #5ec2b7;
+    }
+
+    #status {
+      margin-top: 15px;
+      color: green;
+      font-weight: bold;
+    }
+
+    /* Category boxes styling */
+    .category-boxes {
+      display: flex;
+      gap: 10px; /* space between boxes */
+      flex-wrap: wrap; /* wrap to next line if needed */
+      margin-top: 5px;
+    }
+
+    .category-boxes label {
+      border: 2px solid #74ebd5;
+      border-radius: 8px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: normal;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Highlight selected checkboxes */
+    .category-boxes input[type="checkbox"]:checked + span {
+      background-color: #74ebd5;
+      color: white;
+      border-radius: 5px;
+      padding: 3px 8px;
+    }
+
+    .category-boxes input[type="checkbox"] {
+      display: none; /* hide the default checkbox */
+    }
+  </style>
+</head>
+<body>
+  <div class="form-container">
+    <h2>Registration Form</h2>
+    <form id="registrationForm">
+      <label>Candidate Name:</label>
+      <input type="text" name="Candidate Name" required>
+
+      <label>Mobile Number:</label>
+      <input type="text" name="Mobile Number" required>
+
+      <label>Email id:</label>
+      <input type="email" name="Email id" required>
+
+      <label>Course:</label>
+      <input type="text" name="Course" required>
+
+      <label>Gender:</label>
+      <select name="Gender" required>
+        <option value="">Select</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <label>Category:</label>
+      <div class="category-boxes">
+        <label>
+          <input type="checkbox" name="Category" value="Genral">
+          <span>GENRAL</span>
+        </label>
+        <label>
+          <input type="checkbox" name="Category" value="SC">
+          <span>SC</span>
+        </label>
+        <label>
+          <input type="checkbox" name="Category" value="ST">
+          <span>ST</span>
+        </label>
+        <label>
+          <input type="checkbox" name="Category" value="OBC">
+          <span>OBC</span>
+        </label>
+      </div>
+
+      <button type="submit">Submit</button>
+    </form>
+    <p id="status"></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('registrationForm');
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const data = {};
+      formData.forEach((value, key) => {
+        if(data[key]) { // handle multiple checkboxes
+          data[key] = [].concat(data[key], value);
+        } else {
+          data[key] = value;
+        }
+      });
+
+      fetch('https://script.google.com/macros/s/AKfycbwR6UEnpTAai_aSLj6eup1wz-7fWRVt-U0NVMoYZUgUEeH0rA13Xd1b-u4XJN4H9suWGg/exec', {
+        method: 'POST',
+        body: new URLSearchParams(data)
+      })
+      .then(response => response.text())
+      .then(result => {
+        document.getElementById('status').innerText = result;
+        form.reset();
+      })
+      .catch(error => {
+        document.getElementById('status').innerText = "Error: " + error;
+      });
+    });
+  </script>
+</body>
+</html>
